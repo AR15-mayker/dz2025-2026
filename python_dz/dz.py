@@ -54,14 +54,20 @@ cursor.executemany('INSERT INTO Students (first_name, last_name, group_id) VALUE
 conn.commit()
 
 # --- Шаг 3: Выборка и вывод ---
+# Используем LEFT JOIN, чтобы показать всех студентов, даже если у них нет группы
 cursor.execute('''
 SELECT s.student_id, s.first_name, s.last_name, g.name as group_name
 FROM Students s
-JOIN Groups g ON s.group_id = g.group_id
+LEFT JOIN Groups g ON s.group_id = g.group_id
 ''')
 
 print("Студенты и их группы:")
-for row in cursor.fetchall():
-	print(f"ID: {row[0]}, Имя: {row[1]}, Фамилия: {row[2]}, Группа: {row[3]}")
+rows = cursor.fetchall()
+if not rows:
+	print("Нет данных о студентах.")
+else:
+	for row in rows:
+		group = row[3] if row[3] is not None else "(нет группы)"
+		print(f"ID: {row[0]}, Имя: {row[1]}, Фамилия: {row[2]}, Группа: {group}")
 
 conn.close()
