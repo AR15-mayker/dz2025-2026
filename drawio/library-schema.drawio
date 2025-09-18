@@ -1,0 +1,90 @@
+# Проектирование реляционной схемы библиотеки
+
+**Authors (Авторы)**
+- id (PK, INTEGER, AUTOINCREMENT)
+- full_name (TEXT, NOT NULL)
+
+**Genres (Жанры)**
+- id (PK, INTEGER, AUTOINCREMENT)
+- name (TEXT, NOT NULL, UNIQUE)
+
+**Books (Книги)**
+- id (PK, INTEGER, AUTOINCREMENT)
+- title (TEXT, NOT NULL)
+- year (INTEGER, NOT NULL, CHECK (year <= текущий_год))
+- author_id (INTEGER, NOT NULL, FK → Authors.id)
+- genre_id (INTEGER, NOT NULL, FK → Genres.id)
+
+**Readers (Читатели)**
+- id (PK, INTEGER, AUTOINCREMENT)
+- full_name (TEXT, NOT NULL)
+- email (TEXT, NOT NULL, UNIQUE)
+
+**Book_Issues (Выдачи книг)**
+- id (PK, INTEGER, AUTOINCREMENT)
+- book_id (INTEGER, NOT NULL, FK → Books.id)
+- reader_id (INTEGER, NOT NULL, FK → Readers.id)
+- issue_date (DATE, NOT NULL)
+- return_date (DATE, NULL)
+
+**Внешние ключи (FK):**
+- Books.author_id → Authors.id
+- Books.genre_id → Genres.id
+- Book_Issues.book_id → Books.id
+- Book_Issues.reader_id → Readers.id
+
+**Ограничения домена:**
+- email в Readers — уникальный, не NULL, должен содержать символ "@"
+- year в Books — не больше текущего года, не меньше, например, 1450
+- name в Genres — уникальный, не NULL
+- return_date в Book_Issues — может быть NULL (если книга не возвращена)
+
+# Описание
+
+Этот файл предназначен для хранения схемы реляционной базы данных библиотеки (Books, Authors, Genres, Readers, Book_Issues).
+
+## Как открыть
+
+1. Откройте https://app.diagrams.net/
+2. Выберите "Файл" → "Открыть из..." → "Устройство" и выберите этот файл.
+3. Нарисуйте схему, используя прямоугольники для таблиц и стрелки для связей (FK).
+
+## Структура схемы (текстовый шаблон для вставки)
+
+```
++-------------------+        +-------------------+        +-------------------+
+|     Authors       |        |      Genres       |        |     Readers       |
+|-------------------|        |-------------------|        |-------------------|
+| id (PK)           |        | id (PK)           |        | id (PK)           |
+| full_name         |        | name (UNIQUE)     |        | full_name         |
++-------------------+        +-------------------+        | email (UNIQUE)    |
+                                                        +-------------------+
+
+         |                        |                          |
+         |                        |                          |
+         |                        |                          |
+         v                        v                          v
+
++-------------------+-----------------------------------------------+
+|                        Books                                     |
+|-------------------+-------------------+-------------------+------|
+| id (PK)           | title             | year              |      |
+| author_id (FK)    | genre_id (FK)     |                   |      |
++-------------------+-------------------+-------------------+------+
+
+         |
+         v
+
++-------------------+-------------------+-------------------+-------------------+-------------------+
+|                                         Book_Issues                                              |
+|-------------------+-------------------+-------------------+-------------------+-------------------|
+| id (PK)           | book_id (FK)      | reader_id (FK)    | issue_date        | return_date       |
++-------------------+-------------------+-------------------+-------------------+-------------------+
+```
+
+---
+
+**Подсказка:**
+- Используйте прямоугольники для таблиц, линии/стрелки для связей (FK).
+- Можно добавить цвета и стили для наглядности.
+- Для быстрой вставки структуры используйте шаблон выше.
