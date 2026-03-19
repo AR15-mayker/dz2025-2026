@@ -73,7 +73,7 @@ public:
     LibraryMember(string i = "", string n = "", int max = 5) 
         : id(i), name(n), maxBooks(max) {}
     
-    virtual ~LibraryMember() {}
+    delete ~LibraryMember() {}
     
     string getID() const { return id; }
     string getName() const { return name; }
